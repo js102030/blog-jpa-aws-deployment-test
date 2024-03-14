@@ -94,7 +94,7 @@ public class BlogService {
             });
 
             articles = jsonMapList.stream()
-                    .map(hashMap -> new Article(hashMap.get("title"), hashMap.get("body")))
+                    .map(map -> new Article(map.get("title"), map.get("body")))
                     .toList();
         } catch (JsonProcessingException e) {
             log.error("Failed to parse json {}", e.getMessage());

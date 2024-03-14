@@ -20,7 +20,7 @@ public class ExampleAPIClient {
         if (responseEntity.getStatusCode().is2xxSuccessful()) {  //HTTP status code 200 체크
             return responseEntity.getBody();
         } else {
-            log.error("Failed to fetch data from API. Status code: " + responseEntity.getStatusCodeValue());
+            log.error("Failed to fetch data from API. Status code: " + responseEntity.getStatusCode());
             return null;
         }
     }
