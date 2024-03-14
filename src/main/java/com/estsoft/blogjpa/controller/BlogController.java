@@ -4,6 +4,7 @@ import com.estsoft.blogjpa.dto.AddArticleRequest;
 import com.estsoft.blogjpa.dto.ArticleResponse;
 import com.estsoft.blogjpa.model.Article;
 import com.estsoft.blogjpa.service.BlogService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class BlogController {
     private final BlogService blogService;
 
@@ -51,7 +53,6 @@ public class BlogController {
     public ResponseEntity<Article> updateOneArticle(@PathVariable Long id,
                                                     @RequestBody AddArticleRequest request) {
         Article updated = blogService.update(id, request);
-//        Article updated = blogService.updateTitle(id, request);
         return ResponseEntity.ok(updated);
     }
 }

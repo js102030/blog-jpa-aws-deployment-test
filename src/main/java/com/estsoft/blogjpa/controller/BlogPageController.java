@@ -44,7 +44,6 @@ public class BlogPageController {
             Article article = blogService.findById(id);
             model.addAttribute("article", new ArticleViewResponse(article));
         }
-
         return "newArticle";
     }
 }
