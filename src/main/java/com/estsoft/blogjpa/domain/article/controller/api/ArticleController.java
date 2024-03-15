@@ -34,9 +34,9 @@ public class ArticleController {
     }
 
     @GetMapping("/api/articles")
-    public ResponseEntity<ApiResponse<List<ArticleResponse>>> showArticle() {
+    public ResponseEntity<ApiResponse<List<ArticleResponse>>> showArticles() {
 
-        log.info("showArticle()");
+        log.info("showArticles()");
 
         List<Article> articleList = articleService.findAll();
 
@@ -52,7 +52,7 @@ public class ArticleController {
 
         log.info("showOneArticle()");
 
-        Article article = articleService.findById(articleId);
+        Article article = articleService.findArticleWithCommentsById(articleId);
 
         return ResponseEntity.ok(articleToArticleResponse(article));
     }
@@ -84,8 +84,13 @@ public class ArticleController {
 
         log.info("articleToArticleResponse()");
 
-        List<CommentResponse> commentsResponse = commentService.findByArticleId(article.getId());
-        ApiResponse<List<CommentResponse>> response = new ApiResponse<>(commentsResponse.size(), commentsResponse);
+        List<CommentResponse> commentResponses = article
+                .getComments()
+                .stream()
+                .map(CommentResponse::from)
+                .toList();
+
+        ApiResponse<List<CommentResponse>> response = new ApiResponse<>(article.getComments().size(), commentResponses);
 
         return ArticleResponse.builder()
                 .articleId(article.getId())

@@ -25,17 +25,16 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ExampleAPIClient apiClient;
 
-
     public Article save(ArticlePostRequest request) {
         return articleRepository.save(request.toEntity());
     }
 
     public List<Article> findAll() {
-        return articleRepository.findAll();
+        return articleRepository.findAllWithComments();
     }
 
-    public Article findById(Long id) {
-        return articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found id" + id));
+    public Article findArticleWithCommentsById(Long id) {
+        return articleRepository.findArticleWithCommentsById(id);
     }
 
     public void deleteById(Long articleId) {
@@ -49,9 +48,14 @@ public class ArticleService {
         return article;
     }
 
+    private Article findById(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id의 article이 존재하지 않습니다. id : " + id));
+    }
+
     @Transactional
     public Article updateTitle(Long id, ArticlePostRequest request) {
-        Article article = findById(id);
+        Article article = findArticleWithCommentsById(id);
         articleRepository.updateTitle(id, request.getTitle());
         return article;
     }

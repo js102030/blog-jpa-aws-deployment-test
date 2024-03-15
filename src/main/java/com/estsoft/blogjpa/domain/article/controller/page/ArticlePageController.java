@@ -34,7 +34,7 @@ public class ArticlePageController {
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable Long id, Model model) {
 
-        Article article = articleService.findById(id);
+        Article article = articleService.findArticleWithCommentsById(id);
 
         model.addAttribute("article", article.toViewResponse());
 
@@ -49,7 +49,7 @@ public class ArticlePageController {
         if (id == null) {  // 등록
             model.addAttribute("article", new ArticleViewResponse());
         } else {  // 수정
-            Article article = articleService.findById(id);
+            Article article = articleService.findArticleWithCommentsById(id);
             model.addAttribute("article", new ArticleViewResponse(article));
         }
 
