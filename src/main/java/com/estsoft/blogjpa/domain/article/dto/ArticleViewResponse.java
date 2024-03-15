@@ -1,6 +1,6 @@
-package com.estsoft.blogjpa.dto;
+package com.estsoft.blogjpa.domain.article.dto;
 
-import com.estsoft.blogjpa.model.Article;
+import com.estsoft.blogjpa.domain.article.entity.Article;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

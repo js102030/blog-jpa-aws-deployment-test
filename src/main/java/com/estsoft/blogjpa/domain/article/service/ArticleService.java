@@ -1,12 +1,13 @@
-package com.estsoft.blogjpa.service;
+package com.estsoft.blogjpa.domain.article.service;
 
-import com.estsoft.blogjpa.dto.AddArticleRequest;
+import com.estsoft.blogjpa.domain.article.dto.ArticlePostRequest;
 import com.estsoft.blogjpa.external.ExampleAPIClient;
-import com.estsoft.blogjpa.model.Article;
-import com.estsoft.blogjpa.repository.BlogRepository;
+import com.estsoft.blogjpa.domain.article.entity.Article;
+import com.estsoft.blogjpa.domain.article.repository.ArticleRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,50 +19,47 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class BlogService {
-    private final BlogRepository blogRepository;
+@RequiredArgsConstructor
+public class ArticleService {
+
+    private final ArticleRepository articleRepository;
     private final ExampleAPIClient apiClient;
 
-    public BlogService(BlogRepository blogRepository, ExampleAPIClient apiClient) {
-        this.blogRepository = blogRepository;
-        this.apiClient = apiClient;
-    }
 
-    public Article save(AddArticleRequest request) {
-        return blogRepository.save(request.toEntity());
+    public Article save(ArticlePostRequest request) {
+        return articleRepository.save(request.toEntity());
     }
 
     public List<Article> findAll() {
-        return blogRepository.findAll();
+        return articleRepository.findAll();
     }
 
     public Article findById(Long id) {
-        return blogRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found id" + id));
-//        return blogRepository.findById(id).orElse(new Article());
+        return articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found id" + id));
     }
 
-    public void deleteById(Long id) {
-        blogRepository.deleteById(id);
+    public void deleteById(Long articleId) {
+        articleRepository.deleteById(articleId);
     }
 
     @Transactional
-    public Article update(Long id, AddArticleRequest request) {
+    public Article update(Long id, ArticlePostRequest request) {
         Article article = findById(id);
         article.update(request.getTitle(), request.getContent());
         return article;
     }
 
     @Transactional
-    public Article updateTitle(Long id, AddArticleRequest request) {
+    public Article updateTitle(Long id, ArticlePostRequest request) {
         Article article = findById(id);
-        blogRepository.updateTitle(id, request.getTitle());
+        articleRepository.updateTitle(id, request.getTitle());
         return article;
     }
 
     @Transactional
     public List<Article> saveBulkArticles() {
         List<Article> articles = parsedArticles();
-        return blogRepository.saveAll(articles);
+        return articleRepository.saveAll(articles);
     }
 
     private List<Article> parsedArticles_old() {

@@ -1,18 +1,16 @@
-package com.estsoft.blogjpa.dto;
+package com.estsoft.blogjpa.domain.article.dto;
 
-import com.estsoft.blogjpa.model.Article;
-import lombok.AllArgsConstructor;
+import com.estsoft.blogjpa.domain.article.entity.Article;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
-public class AddArticleRequest {
+public class ArticlePostRequest {
     private String title;
     private String content;
 
-    public Article toEntity() {	// 생성자를 사용해 객체 생성
+    public Article toEntity() {
         return Article.builder()
                 .title(title)
                 .content(content)
