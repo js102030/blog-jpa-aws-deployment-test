@@ -22,6 +22,7 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class CommentService {
+
     private final CommentJpaRepository commentJpaRepository;
     private final ArticleRepository articleRepository;
 
@@ -41,16 +42,6 @@ public class CommentService {
 
         return commentJpaRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 comment id" + commentId));
-    }
-
-    @Transactional(readOnly = true)
-    public List<CommentResponse> findByArticleId(Long articleId) {
-
-        log.info("findByArticleId()");
-
-        List<Comment> allByArticleId = commentJpaRepository.findAllByArticleId(articleId);
-
-        return CommentResponse.listFrom(allByArticleId);
     }
 
     @Transactional(readOnly = true)

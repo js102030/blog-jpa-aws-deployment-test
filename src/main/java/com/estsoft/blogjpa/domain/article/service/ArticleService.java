@@ -25,16 +25,24 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ExampleAPIClient apiClient;
 
-    public Article save(ArticlePostRequest request) {
+    public Article create(ArticlePostRequest request) {
         return articleRepository.save(request.toEntity());
     }
 
-    public List<Article> findAll() {
+    public Article read(Long articleId) {
+        return findById(articleId);
+    }
+
+    public List<Article> readWithComments() {
         return articleRepository.findAllWithComments();
     }
 
-    public Article findArticleWithCommentsById(Long id) {
-        return articleRepository.findArticleWithCommentsById(id);
+    public List<Article> readAll() {
+        return articleRepository.findAll();
+    }
+
+    public Article readWithComments(Long articleId) {
+        return articleRepository.findArticleWithCommentsById(articleId);
     }
 
     public void deleteById(Long articleId) {
@@ -42,22 +50,15 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article update(Long id, ArticlePostRequest request) {
-        Article article = findById(id);
+    public Article update(Long articleId, ArticlePostRequest request) {
+        Article article = findById(articleId);
         article.update(request.getTitle(), request.getContent());
         return article;
     }
 
-    private Article findById(Long id) {
-        return articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 id의 article이 존재하지 않습니다. id : " + id));
-    }
-
-    @Transactional
-    public Article updateTitle(Long id, ArticlePostRequest request) {
-        Article article = findArticleWithCommentsById(id);
-        articleRepository.updateTitle(id, request.getTitle());
-        return article;
+    private Article findById(Long articleId) {
+        return articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id의 article이 존재하지 않습니다. articleId : " + articleId));
     }
 
     @Transactional

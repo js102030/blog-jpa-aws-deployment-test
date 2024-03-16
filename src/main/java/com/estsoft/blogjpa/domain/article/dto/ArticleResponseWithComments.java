@@ -12,12 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ArticleResponse {
+public class ArticleResponseWithComments {
 
     private Long articleId;
     private String title;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private ApiResponse<List<CommentResponse>> comments;
 
 }
