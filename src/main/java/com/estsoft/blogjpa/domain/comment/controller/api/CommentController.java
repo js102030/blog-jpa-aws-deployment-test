@@ -65,7 +65,6 @@ public class CommentController {
                 .ok(commentResponse);
     }
 
-
     @DeleteMapping("/api/comment/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
 

@@ -3,10 +3,10 @@ package com.estsoft.blogjpa.domain.article.controller.api;
 import com.estsoft.blogjpa.common.wrapper.ApiResponse;
 import com.estsoft.blogjpa.domain.article.dto.ArticlePostRequest;
 import com.estsoft.blogjpa.domain.article.dto.ArticleResponse;
+import com.estsoft.blogjpa.domain.article.dto.ArticleResponseWithComments;
 import com.estsoft.blogjpa.domain.article.entity.Article;
 import com.estsoft.blogjpa.domain.article.service.ArticleService;
 import com.estsoft.blogjpa.domain.comment.dto.CommentResponse;
-import com.estsoft.blogjpa.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,30 +21,39 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
-    private final CommentService commentService;
 
     @PostMapping("/api/article")
-    public ResponseEntity<ArticleResponse> addArticle(@RequestBody ArticlePostRequest request) {
+    public ResponseEntity<ArticleResponseWithComments> addArticle(@RequestBody ArticlePostRequest request) {
 
         log.info("addArticle()");
 
-        Article article = articleService.save(request);
+        Article article = articleService.create(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(articleToArticleResponse(article));
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleToArticleResponseWithComments(article));
     }
 
-    @GetMapping("/api/articles")
-    public ResponseEntity<ApiResponse<List<ArticleResponse>>> showArticles() {
+    @GetMapping("/api/articles/with-comments")
+    public ResponseEntity<ApiResponse<List<ArticleResponseWithComments>>> showArticles() {
 
         log.info("showArticles()");
 
-        List<Article> articleList = articleService.findAll();
+        List<Article> articleList = articleService.readWithComments();
 
-        List<ArticleResponse> responseList = articleList.stream()
-                .map(this::articleToArticleResponse)
+        List<ArticleResponseWithComments> responseList = articleList.stream()
+                .map(this::articleToArticleResponseWithComments)
                 .toList();
 
         return ResponseEntity.ok(new ApiResponse<>(responseList.size(), responseList));
+    }
+
+    @GetMapping("/api/article/{articleId}/with-comments")
+    public ResponseEntity<ArticleResponseWithComments> showOneArticleWithComments(@PathVariable Long articleId) {
+
+        log.info("showOneArticle()");
+
+        Article articleWithComments = articleService.readWithComments(articleId);
+
+        return ResponseEntity.ok(articleToArticleResponseWithComments(articleWithComments));
     }
 
     @GetMapping("/api/article/{articleId}")
@@ -52,20 +61,20 @@ public class ArticleController {
 
         log.info("showOneArticle()");
 
-        Article article = articleService.findArticleWithCommentsById(articleId);
+        Article article = articleService.read(articleId);
 
         return ResponseEntity.ok(articleToArticleResponse(article));
     }
 
     @PutMapping("/api/article/{articleId}")
-    public ResponseEntity<ArticleResponse> updateOneArticle(@PathVariable Long articleId,
-                                                            @RequestBody ArticlePostRequest request) {
+    public ResponseEntity<ArticleResponseWithComments> updateOneArticle(@PathVariable Long articleId,
+                                                                        @RequestBody ArticlePostRequest request) {
 
         log.info("updateOneArticle() - id: {}", articleId);
 
         Article updated = articleService.update(articleId, request);
 
-        return ResponseEntity.ok(articleToArticleResponse(updated));
+        return ResponseEntity.ok(articleToArticleResponseWithComments(updated));
     }
 
     @DeleteMapping("/api/article/{articleId}")
@@ -80,7 +89,7 @@ public class ArticleController {
                 .build();
     }
 
-    private ArticleResponse articleToArticleResponse(Article article) {
+    private ArticleResponseWithComments articleToArticleResponseWithComments(Article article) {
 
         log.info("articleToArticleResponse()");
 
@@ -92,7 +101,7 @@ public class ArticleController {
 
         ApiResponse<List<CommentResponse>> response = new ApiResponse<>(article.getComments().size(), commentResponses);
 
-        return ArticleResponse.builder()
+        return ArticleResponseWithComments.builder()
                 .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
@@ -101,6 +110,19 @@ public class ArticleController {
                 .comments(response)
                 .build();
 
+    }
+
+    private ArticleResponse articleToArticleResponse(Article article) {
+
+        log.info("articleToArticleResponse()");
+
+        return ArticleResponse.builder()
+                .articleId(article.getId())
+                .title(article.getTitle())
+                .content(article.getContent())
+                .createdAt(article.getCreatedAt())
+                .updatedAt(article.getUpdatedAt())
+                .build();
     }
 
 }

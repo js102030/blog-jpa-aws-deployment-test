@@ -10,10 +10,11 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    @Modifying
-    @Query("update Article set title = :title where id = :id")
-    void updateTitle(Long id, String title);
 
+    /**
+     * join fetch를 사용하면 연관된 엔티티가 없는 경우 해당 엔티티는 조회되지 않음.
+     * Article에 Comment가 없는 경우, 해당 Article은 조회 결과에서 제외됨.
+     */
     @Query("select a from Article a join fetch a.comments")
     List<Article> findAllWithComments();
 
