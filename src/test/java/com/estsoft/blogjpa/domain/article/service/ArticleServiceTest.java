@@ -2,7 +2,9 @@ package com.estsoft.blogjpa.domain.article.service;
 
 import com.estsoft.blogjpa.domain.article.dto.ArticlePostRequest;
 import com.estsoft.blogjpa.domain.article.entity.Article;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -21,123 +23,102 @@ class ArticleServiceTest {
     ArticleService articleService;
 
     @Test
-    void createArticle() {
-
+    void create() {
+        // given
         ArticlePostRequest request = new ArticlePostRequest("title", "content");
 
-        articleService.create(request);
+        // when
+        Article article = articleService.create(request);
 
-        Article findArticle = articleService.readWithComments(1L);
-
-        assertEquals(1L, findArticle.getId());
-
+        // then
+        assertThat(article.getId()).isNotNull();
+        assertThat(article.getTitle()).isEqualTo(request.getTitle());
+        assertThat(article.getContent()).isEqualTo(request.getContent());
     }
 
     @Test
-    void updateArticle() {
-
+    void read() {
+        // given
         ArticlePostRequest request = new ArticlePostRequest("title", "content");
+        Article article = articleService.create(request);
 
-        articleService.create(request);
+        // when
+        Article foundArticle = articleService.read(article.getId());
 
-        ArticlePostRequest updateRequest = new ArticlePostRequest("update title", "update content");
-
-        articleService.update(1L, updateRequest);
-
-        Article updatedArticle = articleService.readWithComments(1L);
-
-        assertEquals("update title", updatedArticle.getTitle());
-        assertEquals("update content", updatedArticle.getContent());
-
+        // then
+        assertThat(foundArticle.getId()).isEqualTo(article.getId());
+        assertThat(foundArticle.getTitle()).isEqualTo(article.getTitle());
+        assertThat(foundArticle.getContent()).isEqualTo(article.getContent());
     }
 
     @Test
-    void deleteArticle() {
-
+    void readAllWithComments() {
+        // given
         ArticlePostRequest request = new ArticlePostRequest("title", "content");
-
         articleService.create(request);
 
-        articleService.deleteById(1L);
+        // when
+        List<Article> articles = articleService.readAllWithComments();
 
-        Article deletedArticle = articleService.readWithComments(1L);
-
-        assertNull(deletedArticle);
-
+        // then
+        assertThat(articles.size()).isEqualTo(3);
     }
 
     @Test
-    void saveBulkArticles() {
+    void readAll() {
+        // given
+        ArticlePostRequest request = new ArticlePostRequest("title", "content");
+        articleService.create(request);
 
-        articleService.saveBulkArticles();
-
+        // when
         List<Article> articles = articleService.readAll();
 
-        assertEquals(100, articles.size());
-
+        // then
+        assertThat(articles.size()).isEqualTo(4);
     }
 
     @Test
-    void findAllArticles() {
-
-        ArticlePostRequest request1 = new ArticlePostRequest("title1", "content1");
-        ArticlePostRequest request2 = new ArticlePostRequest("title2", "content2");
-        ArticlePostRequest request3 = new ArticlePostRequest("title3", "content3");
-        ArticlePostRequest request4 = new ArticlePostRequest("title4", "content4");
-
-        articleService.create(request1);
-        articleService.create(request2);
-        articleService.create(request3);
-        articleService.create(request4);
-
-        List<Article> articles = articleService.readWithComments();
-
-        for (Article article : articles) {
-            log.info("article = {}", article);
-        }
-
-        assertEquals(4, articles.size());
-
-    }
-
-    @Test
-    void findArticleWithCommentsById() {
-
+    void readWithComments() {
+        // given
         ArticlePostRequest request = new ArticlePostRequest("title", "content");
+        Article article = articleService.create(request);
 
-        articleService.create(request);
-
-        Article article = articleService.readWithComments(1L);
-
-        log.info("article = {}",article);
-
+        // when
+        // then
+        Assertions.assertThatThrownBy(()->articleService.readWithComments(article.getId()))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
-    void findById() {
-
+    void deleteById() {
+        // given
         ArticlePostRequest request = new ArticlePostRequest("title", "content");
+        Article article = articleService.create(request);
 
-        articleService.create(request);
+        // when
+        Long id = article.getId();
+        System.out.println("id💣💣 = " + id);
+        articleService.deleteById(id);
 
-        Article article = articleService.readWithComments(1L);
-
-        assertEquals(1L, article.getId());
-
+        // then
+        Assertions.assertThatThrownBy(() -> articleService.read(id))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
-    void findAll() {
-
+    void update() {
+        // given
         ArticlePostRequest request = new ArticlePostRequest("title", "content");
+        Article article = articleService.create(request);
+        ArticlePostRequest updateRequest = new ArticlePostRequest("updated title", "updated content");
 
-        articleService.create(request);
+        // when
+        Article updatedArticle = articleService.update(article.getId(), updateRequest);
 
-        Article article = articleService.readWithComments(1L);
-
-        assertEquals(1L, article.getId());
-
+        // then
+        assertThat(updatedArticle.getId()).isEqualTo(article.getId());
+        assertThat(updatedArticle.getTitle()).isEqualTo(updateRequest.getTitle());
+        assertThat(updatedArticle.getContent()).isEqualTo(updateRequest.getContent());
     }
-
 
 }

@@ -7,15 +7,13 @@ import com.estsoft.blogjpa.domain.article.repository.ArticleRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -33,7 +31,7 @@ public class ArticleService {
         return findById(articleId);
     }
 
-    public List<Article> readWithComments() {
+    public List<Article> readAllWithComments() {
         return articleRepository.findAllWithComments();
     }
 
@@ -42,7 +40,9 @@ public class ArticleService {
     }
 
     public Article readWithComments(Long articleId) {
-        return articleRepository.findArticleWithCommentsById(articleId);
+        Optional<Article> articleWithCommentsById = articleRepository.findArticleWithCommentsById(articleId);
+
+        return articleWithCommentsById.orElseThrow(() -> new EntityNotFoundException("해당 id의 article이 존재하지 않습니다. articleId : " + articleId));
     }
 
     public void deleteById(Long articleId) {
@@ -58,7 +58,7 @@ public class ArticleService {
 
     private Article findById(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 id의 article이 존재하지 않습니다. articleId : " + articleId));
+                .orElseThrow(() -> new EntityNotFoundException("해당 id의 article이 존재하지 않습니다. articleId : " + articleId));
     }
 
     @Transactional

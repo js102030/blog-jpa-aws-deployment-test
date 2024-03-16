@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
@@ -19,5 +20,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findAllWithComments();
 
     @Query("select a from Article a join fetch a.comments where a.id = :id")
-    Article findArticleWithCommentsById(Long id);
+    Optional<Article> findArticleWithCommentsById(Long id);
 }

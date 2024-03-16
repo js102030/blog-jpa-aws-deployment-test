@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -37,7 +38,7 @@ public class ArticleController {
 
         log.info("showArticles()");
 
-        List<Article> articleList = articleService.readWithComments();
+        List<Article> articleList = articleService.readAllWithComments();
 
         List<ArticleResponseWithComments> responseList = articleList.stream()
                 .map(this::articleToArticleResponseWithComments)
@@ -51,9 +52,9 @@ public class ArticleController {
 
         log.info("showOneArticle()");
 
-        Article articleWithComments = articleService.readWithComments(articleId);
+        Article articleWithComment = articleService.readWithComments(articleId);
 
-        return ResponseEntity.ok(articleToArticleResponseWithComments(articleWithComments));
+        return ResponseEntity.ok(articleToArticleResponseWithComments(articleWithComment));
     }
 
     @GetMapping("/api/article/{articleId}")

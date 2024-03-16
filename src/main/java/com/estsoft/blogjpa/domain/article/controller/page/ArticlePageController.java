@@ -24,7 +24,7 @@ public class ArticlePageController {
     @GetMapping("/articles")
     public String getArticles(Model model) {
 
-        List<Article> articles = articleService.readWithComments();
+        List<Article> articles = articleService.readAllWithComments();
 
         model.addAttribute("articles", articles);
 
