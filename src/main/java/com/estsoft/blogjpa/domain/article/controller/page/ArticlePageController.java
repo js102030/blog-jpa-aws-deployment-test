@@ -1,6 +1,6 @@
 package com.estsoft.blogjpa.domain.article.controller.page;
 
-import com.estsoft.blogjpa.domain.article.dto.ArticleViewResponse;
+import com.estsoft.blogjpa.domain.article.dto.ArticleResponse;
 import com.estsoft.blogjpa.domain.article.entity.Article;
 import com.estsoft.blogjpa.domain.article.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +47,10 @@ public class ArticlePageController {
         log.info("newArticle() - id: {}", id);
 
         if (id == null) {  // 등록
-            model.addAttribute("article", new ArticleViewResponse());
+            model.addAttribute("article", new ArticleResponse());
         } else {  // 수정
             Article article = articleService.readWithComments(id);
-            model.addAttribute("article", new ArticleViewResponse(article));
+            model.addAttribute("article", new ArticleResponse(article));
         }
 
         return "newArticle";

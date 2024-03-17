@@ -1,11 +1,9 @@
 package com.estsoft.blogjpa.domain.article.dto;
 
-import com.estsoft.blogjpa.common.wrapper.ApiResponse;
-import com.estsoft.blogjpa.domain.comment.dto.CommentResponse;
+import com.estsoft.blogjpa.domain.article.entity.Article;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +18,11 @@ public class ArticleResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public ArticleResponse(Article article) {
+        this.articleId = article.getId();
+        this.title = article.getTitle();
+        this.content = article.getContent();
+        this.createdAt = article.getCreatedAt();
+        this.updatedAt = article.getUpdatedAt();
+    }
 }

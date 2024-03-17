@@ -1,6 +1,6 @@
 package com.estsoft.blogjpa.domain.article.entity;
 
-import com.estsoft.blogjpa.domain.article.dto.ArticleViewResponse;
+import com.estsoft.blogjpa.domain.article.dto.ArticleResponse;
 import com.estsoft.blogjpa.domain.comment.entity.Comment;
 import jakarta.persistence.*;
 import lombok.*;
@@ -54,8 +54,8 @@ public class Article {
         this.content = content;
     }
 
-    public ArticleViewResponse toViewResponse() {
-        return new ArticleViewResponse(id, title, content, createdAt, updatedAt);
+    public ArticleResponse toViewResponse() {
+        return new ArticleResponse(id, title, content, createdAt, updatedAt);
     }
 
     public void update(String title, String content) {
