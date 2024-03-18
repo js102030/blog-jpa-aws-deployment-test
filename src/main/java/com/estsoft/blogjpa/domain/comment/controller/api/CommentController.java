@@ -1,9 +1,8 @@
 package com.estsoft.blogjpa.domain.comment.controller.api;
 
 import com.estsoft.blogjpa.common.wrapper.ApiResponse;
-import com.estsoft.blogjpa.domain.comment.dto.CommentPostRequest;
+import com.estsoft.blogjpa.domain.comment.dto.CommentRequest;
 import com.estsoft.blogjpa.domain.comment.dto.CommentResponse;
-import com.estsoft.blogjpa.domain.comment.dto.CommentUpdateRequest;
 import com.estsoft.blogjpa.domain.comment.entity.Comment;
 import com.estsoft.blogjpa.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/api/comment")
-    public ResponseEntity<CommentResponse> createComment(@RequestBody CommentPostRequest request) {
+    public ResponseEntity<CommentResponse> createComment(@RequestBody CommentRequest request) {
 
         log.info("createComment()");
 
@@ -55,7 +54,7 @@ public class CommentController {
     }
 
     @PutMapping("/api/comment/{commentId}")
-    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequest request) {
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody CommentRequest request) {
 
         log.info("updateComment() - id: {}", commentId);
 

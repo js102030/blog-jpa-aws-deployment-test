@@ -2,9 +2,8 @@ package com.estsoft.blogjpa.domain.comment.service;
 
 import com.estsoft.blogjpa.domain.article.entity.Article;
 import com.estsoft.blogjpa.domain.article.service.ArticleService;
-import com.estsoft.blogjpa.domain.comment.dto.CommentPostRequest;
+import com.estsoft.blogjpa.domain.comment.dto.CommentRequest;
 import com.estsoft.blogjpa.domain.comment.dto.CommentResponse;
-import com.estsoft.blogjpa.domain.comment.dto.CommentUpdateRequest;
 import com.estsoft.blogjpa.domain.comment.entity.Comment;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ class CommentServiceTest {
     @Test
     void create() {
         // given
-        CommentPostRequest request = new CommentPostRequest(1L, "content505050");
+        CommentRequest request = new CommentRequest(1L, "content505050");
 
         // when
         commentService.createComment(request);
@@ -44,7 +43,7 @@ class CommentServiceTest {
     @Test
     void findById() {
         // given
-        CommentPostRequest request = new CommentPostRequest(1L, "content505050");
+        CommentRequest request = new CommentRequest(1L, "content505050");
         CommentResponse comment = commentService.createComment(request);
 
         // when
@@ -57,7 +56,7 @@ class CommentServiceTest {
     @Test
     void readComments() {
         // given
-        CommentPostRequest request = new CommentPostRequest(1L, "content505050");
+        CommentRequest request = new CommentRequest(1L, "content505050");
         commentService.createComment(request);
 
         // when
@@ -73,11 +72,11 @@ class CommentServiceTest {
     @Test
     void updateComment() {
         // given
-        CommentPostRequest request = new CommentPostRequest(1L, "content505050");
+        CommentRequest request = new CommentRequest(1L, "content505050");
         CommentResponse createResponse = commentService.createComment(request);
 
         // when
-        CommentResponse commentResponse = commentService.updateComment(new CommentUpdateRequest(1L, "updatedContent"), createResponse.getId());
+        CommentResponse commentResponse = commentService.updateComment(new CommentRequest(1L, "updatedContent"), createResponse.getId());
         Comment comment = commentService.findById(commentResponse.getId());
 
         // then

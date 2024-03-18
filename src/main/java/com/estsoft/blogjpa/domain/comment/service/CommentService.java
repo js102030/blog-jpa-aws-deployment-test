@@ -2,9 +2,8 @@ package com.estsoft.blogjpa.domain.comment.service;
 
 import com.estsoft.blogjpa.domain.article.entity.Article;
 import com.estsoft.blogjpa.domain.article.repository.ArticleRepository;
-import com.estsoft.blogjpa.domain.comment.dto.CommentPostRequest;
+import com.estsoft.blogjpa.domain.comment.dto.CommentRequest;
 import com.estsoft.blogjpa.domain.comment.dto.CommentResponse;
-import com.estsoft.blogjpa.domain.comment.dto.CommentUpdateRequest;
 import com.estsoft.blogjpa.domain.comment.entity.Comment;
 import com.estsoft.blogjpa.domain.comment.repository.CommentJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,7 +25,7 @@ public class CommentService {
     private final CommentJpaRepository commentJpaRepository;
     private final ArticleRepository articleRepository;
 
-    public CommentResponse createComment(CommentPostRequest request) {
+    public CommentResponse createComment(CommentRequest request) {
 
         log.info("createComment()");
 
@@ -54,7 +53,7 @@ public class CommentService {
         return CommentResponse.listFrom(comments);
     }
 
-    public CommentResponse updateComment(CommentUpdateRequest request, Long commentId) {
+    public CommentResponse updateComment(CommentRequest request, Long commentId) {
 
         log.info("updateComment()");
 
@@ -71,7 +70,7 @@ public class CommentService {
         commentJpaRepository.deleteById(commentId);
     }
 
-    private Comment createCommentFromRequest(CommentPostRequest request) {
+    private Comment createCommentFromRequest(CommentRequest request) {
 
         log.info("createCommentFromRequest()");
 

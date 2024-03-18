@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CommentUpdateRequest {
+public class CommentRequest {
 
     private Long articleId;
     private String content;
