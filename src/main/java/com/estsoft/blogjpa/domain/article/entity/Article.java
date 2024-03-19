@@ -23,10 +23,10 @@ public class Article {
     @Column(name = "article_id", updatable = false)
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(nullable = false)
     private String content;
 
     @CreatedDate

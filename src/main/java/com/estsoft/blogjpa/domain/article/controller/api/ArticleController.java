@@ -7,14 +7,18 @@ import com.estsoft.blogjpa.domain.article.dto.ArticleResponseWithComments;
 import com.estsoft.blogjpa.domain.article.entity.Article;
 import com.estsoft.blogjpa.domain.article.service.ArticleService;
 import com.estsoft.blogjpa.domain.comment.dto.CommentResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
@@ -23,7 +27,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    @PostMapping("/api/article")
+    @PostMapping("/api/articles")
     public ResponseEntity<ArticleResponseWithComments> addArticle(@RequestBody ArticlePostRequest request) {
 
         log.info("addArticle()");
@@ -47,7 +51,7 @@ public class ArticleController {
         return ResponseEntity.ok(new ApiResponse<>(responseList.size(), responseList));
     }
 
-    @GetMapping("/api/article/{articleId}/with-comments")
+    @GetMapping("/api/articles/{articleId}/with-comments")
     public ResponseEntity<ArticleResponseWithComments> showOneArticleWithComments(@PathVariable Long articleId) {
 
         log.info("showOneArticle()");
@@ -57,7 +61,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleToArticleResponseWithComments(articleWithComment));
     }
 
-    @GetMapping("/api/article/{articleId}")
+    @GetMapping("/api/articles/{articleId}")
     public ResponseEntity<ArticleResponse> showOneArticle(@PathVariable Long articleId) {
 
         log.info("showOneArticle()");
@@ -67,7 +71,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleToArticleResponse(article));
     }
 
-    @PutMapping("/api/article/{articleId}")
+    @PutMapping("/api/articles/{articleId}")
     public ResponseEntity<ArticleResponseWithComments> updateOneArticle(@PathVariable Long articleId,
                                                                         @RequestBody ArticlePostRequest request) {
 
@@ -78,7 +82,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleToArticleResponseWithComments(updated));
     }
 
-    @DeleteMapping("/api/article/{articleId}")
+    @DeleteMapping("/api/articles/{articleId}")
     public ResponseEntity<?> deleteOneArticle(@PathVariable Long articleId) {
 
         log.info("deleteOneArticle()");

@@ -41,16 +41,20 @@ if (modifyButton) {
 const createButton = document.getElementById('create-btn');
 
 if (createButton) {
+
+
+    console.log(createButton);
     createButton.addEventListener('click', event => {
         fetch(`/api/articles`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
-            body : JSON.stringify({
+            body: JSON.stringify({
                 title: document.getElementById('title').value,
                 content: document.getElementById('content').value
             }),
+
         }).then(() => {
             alert('등록 완료되었습니다');
             location.replace("/articles");
