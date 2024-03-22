@@ -1,19 +1,18 @@
 package com.estsoft.blogjpa.domain.comment.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.estsoft.blogjpa.domain.article.entity.Article;
 import com.estsoft.blogjpa.domain.article.service.ArticleService;
 import com.estsoft.blogjpa.domain.comment.dto.CommentRequest;
 import com.estsoft.blogjpa.domain.comment.dto.CommentResponse;
 import com.estsoft.blogjpa.domain.comment.entity.Comment;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -76,10 +75,16 @@ class CommentServiceTest {
         CommentResponse createResponse = commentService.createComment(request);
 
         // when
-        CommentResponse commentResponse = commentService.updateComment(new CommentRequest(1L, "updatedContent"), createResponse.getId());
+        CommentResponse commentResponse = commentService.updateComment(new CommentRequest(1L, "updatedContent"),
+                createResponse.getId());
         Comment comment = commentService.findById(commentResponse.getId());
 
         // then
         assertThat(comment.getContent()).isEqualTo("updatedContent");
+    }
+
+    @Test
+    void asd() {
+        //asd
     }
 }
