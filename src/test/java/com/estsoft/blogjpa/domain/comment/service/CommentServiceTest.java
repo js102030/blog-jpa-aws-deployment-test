@@ -84,7 +84,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void asd() {
-        //asd
+    void aa() {
+        //aa
     }
 }
